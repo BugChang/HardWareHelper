@@ -7,6 +7,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using AxCPUCARDOCXLib;
 using Newtonsoft.Json;
 
 namespace HardWareHelper
@@ -16,6 +17,7 @@ namespace HardWareHelper
 
         private static SerialPort _serialPort;
         private static string _comData;
+        private static AxCpuCardOCX axCpuCard = new AxCpuCardOCX();
 
         public FrmMain()
         {
@@ -170,15 +172,48 @@ namespace HardWareHelper
             _serialPort.Close();
         }
 
+
+
         #endregion
 
         #region 国办CPU卡
 
+        public static bool WriteCpuCard(HttpListenerContext httpListenerContext)
+        {
+            var port = Convert.ToInt16(httpListenerContext.Request.QueryString["port"]);
+            var baud = Convert.ToInt32(httpListenerContext.Request.QueryString["baudRate"]);
+            byte[] data = Encoding.UTF8.GetBytes(httpListenerContext.Request.QueryString["data"]);
+            string dataBase64String = Convert.ToBase64String(data);
+            axCpuCard.ClosePort();
+            var bOpen = axCpuCard.OpenPort(port, baud);
+            if (bOpen)
+            {
+                if (axCpuCard.IsCardAvailabile)
+                {
+                    return axCpuCard.SetFileDataBinBase64(dataBase64String);
+                }
+            }
+            return false;
+        }
 
+
+        public static string ReadCpuCard(HttpListenerContext httpListenerContext)
+        {
+            var port = Convert.ToInt16(httpListenerContext.Request.QueryString["port"]);
+            var baud = Convert.ToInt32(httpListenerContext.Request.QueryString["baudRate"]);
+            axCpuCard.ClosePort();
+            var bOpen = axCpuCard.OpenPort(port, baud);
+            if (bOpen)
+            {
+                if (axCpuCard.IsCardAvailabile)
+                {
+                    return Encoding.UTF8.GetString(Convert.FromBase64String(axCpuCard.GetFileDataBinBase64()));
+                }
+            }
+            return "";
+        }
 
         #endregion
-
-
 
     }
 }

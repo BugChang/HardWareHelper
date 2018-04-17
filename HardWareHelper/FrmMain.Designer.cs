@@ -32,11 +32,12 @@
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(426, 392);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmMain";
-            this.Text = "FrmMain";
+            this.Text = "硬件助手";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.ResumeLayout(false);
 
